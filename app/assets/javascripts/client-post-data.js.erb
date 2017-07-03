@@ -1,0 +1,35 @@
+formGets = function() {
+    $('#my-form').submit(function (e) {
+
+        var myData = $("#my-form").serializeArray();
+        $('#id').empty()
+        $('#name').empty()
+
+        $.ajax({
+            type: 'POST',
+            url: '<%= Rails.application.routes.url_helpers.users_path %>',
+            data: myData,
+            dataType: 'json',
+            encode: true
+        })
+            .done(function (data) {
+                if (Object.keys(data).length == 0)
+                    console.log('Response data is empty')
+                else {
+                    console.log(data)
+                    $('#id').html(data.aisid)
+                    $('#name').html(data.login)
+                }
+
+            })
+
+            .fail(function (data) {
+                console.log("something went wrong")
+            });
+
+        e.preventDefault();
+        return false;
+    });
+};
+
+$(document).on('turbolinks:load', formGets);
